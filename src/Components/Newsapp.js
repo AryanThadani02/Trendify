@@ -5,7 +5,7 @@ const Newsapp = () => {
   const [search, setSearch] = useState("");
   const [newsData, setNewsData] = useState(null);
   const [darkMode, setDarkMode] = useState(false);
-  const API_KEY = "9c3ed8ee95884dec979460a60f96675b";
+  const API_KEY = "f638d650d4c24dd094e1d208602a4e65";
 
   const getData = async () => {
     try {
@@ -115,8 +115,8 @@ const Newsapp = () => {
 
 
       <div className="flex flex-wrap justify-center gap-5">
-        {newsData ? <Card data={newsData} darkMode={darkMode} /> : <p className="text-red-500 dark:text-gray-300">{newsData === null ? 'Failed to load news. Try again later.' : 'Loading news...'}</p>}
-      </div>
+        {newsData ? <Card data={newsData} darkMode={darkMode} /> : <p className="text-red-500 dark:text-gray-300"> Loading news... </p>
+        }</div>
 
     </div>
   );
