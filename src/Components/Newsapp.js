@@ -5,7 +5,7 @@ const Newsapp = () => {
   const [search, setSearch] = useState("technology");
   const [newsData, setNewsData] = useState([]);
   const [darkMode, setDarkMode] = useState(false);
-  const API_KEY = "pub_589310f75ec51ad1888b626e1f7bd94a45d34";
+  const API_KEY = "pub_58934aed7c337ed74217c3f8e3def2ae87e7a";
 
   const getData = async () => {
     try {
@@ -104,7 +104,7 @@ const Newsapp = () => {
       </div>
 
       <div className="flex justify-center flex-wrap gap-2 mb-4">
-        {["AI", "Robotics", "BlockChain", "CyberSecurity", " MachineLearning"].map((topic) => (
+        {["AI", "Robotics", "BlockChain", "CyberSecurity", " Apple"].map((topic) => (
           <button
             key={topic}
             onClick={() => filterByTopic(topic)}
