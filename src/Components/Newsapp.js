@@ -2,34 +2,36 @@ import React, { useEffect, useState } from 'react';
 import Card from './Card';
 
 const Newsapp = () => {
-  const [search, setSearch] = useState("");
-  const [newsData, setNewsData] = useState(null);
+  const [search, setSearch] = useState("technology");
+  const [newsData, setNewsData] = useState([]);
   const [darkMode, setDarkMode] = useState(false);
-  const API_KEY = "f638d650d4c24dd094e1d208602a4e65";
+  const API_KEY = "pub_589310f75ec51ad1888b626e1f7bd94a45d34";
 
   const getData = async () => {
     try {
-      const response = await fetch(`https://newsdata.io/api/1/news?apikey=pub_589310f75ec51ad1888b626e1f7bd94a45d34&q=technology`);
+      const response = await fetch(
+        `https://newsdata.io/api/1/news?apikey=${API_KEY}&q=${search}&language=en&category=technology`
+      );
       const jsonData = await response.json();
-      setNewsData(jsonData.results);
-      console.log(jsonData.results);
 
+      // Log the API response to inspect its structure
+      console.log(jsonData);
+
+      if (jsonData && jsonData.results && Array.isArray(jsonData.results)) {
+        setNewsData(jsonData.results);  // Set the fetched data if it's an array
+      } else {
+        console.error("No results found or wrong format:", jsonData);
+        setNewsData([]); // Set empty array if results are not an array
+      }
     } catch (error) {
       console.error("Error fetching data:", error);
+      setNewsData([]); // Set to empty array in case of error
     }
   };
 
   useEffect(() => {
     getData();
-  }, [search]);
-
-  useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, [darkMode]);
+  }, [search]); // Fetch new data when search term changes
 
   const handleInput = (e) => {
     setSearch(e.target.value);
@@ -64,7 +66,6 @@ const Newsapp = () => {
             Search
           </button>
         </div>
-        {/* Dark Mode Toggle Button */}
         <button
           id="theme-toggle"
           type="button"
@@ -98,13 +99,12 @@ const Newsapp = () => {
         </button>
       </nav>
 
-
       <div className="text-center my-4 font-semibold text-xl md:text-2xl">
         Stay Updated with Trendify
       </div>
 
       <div className="flex justify-center flex-wrap gap-2 mb-4">
-        {["AI", "Apple", "Samsung", "Google", "Microsoft"].map((topic) => (
+        {["AI", "Robotics", "BlockChain", "CyberSecurity", " MachineLearning"].map((topic) => (
           <button
             key={topic}
             onClick={() => filterByTopic(topic)}
@@ -115,11 +115,13 @@ const Newsapp = () => {
         ))}
       </div>
 
-
       <div className="flex flex-wrap justify-center gap-5">
-        {newsData ? <Card data={newsData} darkMode={darkMode} /> : <p className="text-red-500 dark:text-gray-300"> Loading news... </p>
-        }</div>
-
+        {Array.isArray(newsData) && newsData.length > 0 ? (
+          <Card data={newsData} darkMode={darkMode} />
+        ) : (
+          <p className="text-red-500 dark:text-gray-300">No news found or still loading...</p>
+        )}
+      </div>
     </div>
   );
 };
