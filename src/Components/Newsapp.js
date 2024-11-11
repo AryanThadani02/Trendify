@@ -9,9 +9,11 @@ const Newsapp = () => {
 
   const getData = async () => {
     try {
-      const response = await fetch(`https://newsapi.org/v2/top-headlines?category=Technology&q=${search}&apiKey=${API_KEY}`);
+      const response = await fetch(`https://newsdata.io/api/1/news?apikey=pub_589310f75ec51ad1888b626e1f7bd94a45d34&q=technology`);
       const jsonData = await response.json();
-      setNewsData(jsonData.articles);
+      setNewsData(jsonData.results);
+      console.log(jsonData.results);
+
     } catch (error) {
       console.error("Error fetching data:", error);
     }
