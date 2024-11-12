@@ -3,6 +3,7 @@ import Card from './Card';
 import Navbar from './Navbar'; // Import the new Navbar component
 import { signInWithGoogle } from '../Firebase'; // Import your firebase config file
 import { UserContext } from '../UserContext'; // Import the UserContext
+import WeeklyDigestSubscription from './WeeklyDigestSubscription';
 
 const Newsapp = () => {
   const [search, setSearch] = useState("technology");
@@ -107,6 +108,7 @@ const Newsapp = () => {
           <p className="text-red-500 dark:text-gray-300">No news found or still loading...</p>
         )}
       </div>
+      <WeeklyDigestSubscription darkMode={darkMode} />
     </div>
   );
 };
