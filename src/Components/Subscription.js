@@ -8,6 +8,7 @@ import 'react-toastify/dist/ReactToastify.css'; // Import toast styles
 const SubscriptionPage = () => {
   const { user, handleSignOut } = useContext(UserContext);
   const [darkMode, setDarkMode] = useState(false);
+  const [subscribed, setSubscribed] = useState(false); // New state to track subscription
 
   if (!user) {
     return <Navigate to="/" />;
@@ -25,7 +26,15 @@ const SubscriptionPage = () => {
       position: "top-center",
       autoClose: 3000, // Auto close the toast after 3 seconds
     });
+
+    // Set the subscribed state to true to trigger navigation
+    setSubscribed(true);
   };
+
+  // Redirect to home page after subscription
+  if (subscribed) {
+    return <Navigate to="/" />;
+  }
 
   return (
     <div className={`min-h-screen ${darkMode ? 'bg-black' : 'bg-white'}`}>
@@ -57,7 +66,7 @@ const SubscriptionPage = () => {
         <div className="flex justify-center gap-4">
           <button
             className="px-6 py-2 bg-green-500 text-white rounded-lg text-lg"
-            onClick={handleSubscribe} // Call handleSubscribe to show toast
+            onClick={handleSubscribe} // Call handleSubscribe to show toast and update state
           >
             Subscribe Now
           </button>
