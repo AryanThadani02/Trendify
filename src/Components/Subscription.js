@@ -1,17 +1,30 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from 'react';
+import { UserContext } from '../UserContext';
 import { Navigate } from 'react-router-dom';
-import Navbar from "./Navbar"; // Import Navbar component
+import Navbar from "./Navbar";
+import { toast } from 'react-toastify'; // Import toast
+import 'react-toastify/dist/ReactToastify.css'; // Import toast styles
 
-const SubscriptionPage = ({ user, handleSignIn, handleSignOut }) => {
+const SubscriptionPage = () => {
+  const { user, handleSignOut } = useContext(UserContext);
   const [darkMode, setDarkMode] = useState(false);
 
   if (!user) {
     return <Navigate to="/" />;
   }
+  console.log("user", user);
 
   // Toggle Dark Mode
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
+  };
+
+  const handleSubscribe = () => {
+    // Show success toast when Subscribe button is clicked
+    toast.success("Congratulations! You are now subscribed.", {
+      position: "top-center",
+      autoClose: 3000, // Auto close the toast after 3 seconds
+    });
   };
 
   return (
@@ -20,7 +33,6 @@ const SubscriptionPage = ({ user, handleSignIn, handleSignOut }) => {
         darkMode={darkMode}
         toggleDarkMode={toggleDarkMode}
         user={user}
-        handleSignIn={handleSignIn}
         handleSignOut={handleSignOut}
       />
 
@@ -38,22 +50,16 @@ const SubscriptionPage = ({ user, handleSignIn, handleSignOut }) => {
             <li>Ad-free browsing experience</li>
             <li>Priority support and notifications</li>
             <li>Customizable news feeds based on your interests</li>
-            <li>Access to advanced analytics and insights</li>
+            <li>You can comment on the article</li>
           </ul>
         </div>
 
         <div className="flex justify-center gap-4">
           <button
             className="px-6 py-2 bg-green-500 text-white rounded-lg text-lg"
-            onClick={() => alert("Redirecting to payment page")}
+            onClick={handleSubscribe} // Call handleSubscribe to show toast
           >
             Subscribe Now
-          </button>
-          <button
-            className="px-6 py-2 bg-yellow-500 text-white rounded-lg text-lg"
-            onClick={() => alert("Redirecting to upgrade page")}
-          >
-            Upgrade Now
           </button>
         </div>
       </div>

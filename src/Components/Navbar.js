@@ -1,7 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from "react-router-dom";
+import { UserContext } from '../UserContext';
 
-const Navbar = ({ darkMode, toggleDarkMode, user, handleSignIn, handleSignOut }) => {
+const Navbar = ({ darkMode, toggleDarkMode }) => {
+  const { user, handleSignIn, handleSignOut } = useContext(UserContext);
+  console.log("user", user);
+
   return (
     <nav className={`flex justify-between items-center p-4 ${darkMode ? 'bg-gray-800' : 'bg-blue-200'}`}>
       <Link to="/"><h1 className={`text-2xl font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>Trendify - Daily Tech & AI News Platform</h1></Link>

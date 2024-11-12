@@ -1,15 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import Card from './Card';
 import Navbar from './Navbar'; // Import the new Navbar component
 import { signInWithGoogle } from '../Firebase'; // Import your firebase config file
+import { UserContext } from '../UserContext'; // Import the UserContext
 
 const Newsapp = () => {
   const [search, setSearch] = useState("technology");
   const [newsData, setNewsData] = useState([]);
   const [darkMode, setDarkMode] = useState(false);
-  const [user, setUser] = useState(null); // State for signed-in user
 
-  const API_KEY = "pub_589310f75ec51ad1888b626e1f7bd94a45d34";
+  const { user, signIn, signOut } = useContext(UserContext); // Access user and actions from context
+
+  const API_KEY = "pub_58934aed7c337ed74217c3f8e3def2ae87e7a";
 
   const getData = async () => {
     try {
@@ -35,14 +37,6 @@ const Newsapp = () => {
     getData();
   }, [search]);
 
-  useEffect(() => {
-    // Load user data from localStorage if available
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-  }, []);
-
   const handleInput = (e) => {
     setSearch(e.target.value);
   };
@@ -55,22 +49,18 @@ const Newsapp = () => {
     setDarkMode(!darkMode);
   };
 
-  // Update the user state and store in localStorage when Google sign-in is successful
   const handleSignIn = async () => {
     try {
       const result = await signInWithGoogle();
       console.log(result);
-
-      setUser(result); // Store user info after sign-in
-      localStorage.setItem("user", JSON.stringify(result)); // Store user in localStorage
+      signIn(result); // Use context's signIn function
     } catch (error) {
       console.error("Error during Google sign-in:", error.message);
     }
   };
 
   const handleSignOut = () => {
-    setUser(null); // Clear user state
-    localStorage.removeItem("user"); // Remove user from localStorage
+    signOut(); // Use context's signOut function
   };
 
   return (
