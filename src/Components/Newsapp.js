@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import Card from './Card';
+import Navbar from './Navbar'; // Import the new Navbar component
+import { signInWithGoogle } from '../Firebase'; // Import your firebase config file
 
 const Newsapp = () => {
   const [search, setSearch] = useState("technology");
   const [newsData, setNewsData] = useState([]);
   const [darkMode, setDarkMode] = useState(false);
-  const API_KEY = "pub_58934aed7c337ed74217c3f8e3def2ae87e7a";
+  const [user, setUser] = useState(null); // State for signed-in user
+
+  const API_KEY = "pub_589310f75ec51ad1888b626e1f7bd94a45d34";
 
   const getData = async () => {
     try {
@@ -13,25 +17,31 @@ const Newsapp = () => {
         `https://newsdata.io/api/1/news?apikey=${API_KEY}&q=${search}&language=en&category=technology`
       );
       const jsonData = await response.json();
-
-      // Log the API response to inspect its structure
       console.log(jsonData);
 
       if (jsonData && jsonData.results && Array.isArray(jsonData.results)) {
-        setNewsData(jsonData.results);  // Set the fetched data if it's an array
+        setNewsData(jsonData.results);
       } else {
         console.error("No results found or wrong format:", jsonData);
-        setNewsData([]); // Set empty array if results are not an array
+        setNewsData([]);
       }
     } catch (error) {
       console.error("Error fetching data:", error);
-      setNewsData([]); // Set to empty array in case of error
+      setNewsData([]);
     }
   };
 
   useEffect(() => {
     getData();
-  }, [search]); // Fetch new data when search term changes
+  }, [search]);
+
+  useEffect(() => {
+    // Load user data from localStorage if available
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
 
   const handleInput = (e) => {
     setSearch(e.target.value);
@@ -45,66 +55,50 @@ const Newsapp = () => {
     setDarkMode(!darkMode);
   };
 
+  // Update the user state and store in localStorage when Google sign-in is successful
+  const handleSignIn = async () => {
+    try {
+      const result = await signInWithGoogle();
+      console.log(result);
+
+      setUser(result); // Store user info after sign-in
+      localStorage.setItem("user", JSON.stringify(result)); // Store user in localStorage
+    } catch (error) {
+      console.error("Error during Google sign-in:", error.message);
+    }
+  };
+
+  const handleSignOut = () => {
+    setUser(null); // Clear user state
+    localStorage.removeItem("user"); // Remove user from localStorage
+  };
+
   return (
     <div className={`min-h-screen ${darkMode ? 'bg-gray-900 text-white' : 'bg-white text-gray-900'}`}>
-      <nav className={`flex flex-col md:flex-row items-center justify-between p-4 md:px-8 ${darkMode ? 'bg-gray-800' : 'bg-blue-200'}`}>
-        <h1 className="text-xl md:text-2xl font-semibold mb-4 md:mb-0 text-center md:text-left">
-          Trendify - Daily Tech & AI News Platform
-        </h1>
-        <div className="flex items-center gap-3">
-          <input
-            type="text"
-            placeholder="Search News"
-            value={search}
-            onChange={handleInput}
-            className={`w-full md:w-64 px-3 py-2 text-base md:text-lg border-none rounded ${darkMode ? 'bg-black' : 'bg-white'}`}
-          />
-          <button
-            onClick={getData}
-            className="w-20 h-10 bg-blue-500 rounded text-white text-base md:text-lg"
-          >
-            Search
-          </button>
-        </div>
+      <Navbar darkMode={darkMode} toggleDarkMode={toggleDarkMode} user={user} handleSignIn={handleSignIn} handleSignOut={handleSignOut} />
+
+      <div className="flex justify-center gap-3 mb-4 mt-4">
+        <input
+          type="text"
+          placeholder="Search News"
+          value={search}
+          onChange={handleInput}
+          className={`w-full md:w-64 px-3 py-2 text-base md:text-lg border-none rounded ${darkMode ? 'bg-black' : 'bg-white'}`}
+        />
         <button
-          id="theme-toggle"
-          type="button"
-          onClick={toggleDarkMode}
-          className="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 my-2"
+          onClick={getData}
+          className="w-20 h-10 bg-blue-500 rounded text-white text-base md:text-lg"
         >
-          <svg
-            id="theme-toggle-dark-icon"
-            className={`w-5 h-5 ${darkMode ? 'block' : 'hidden'}`}
-            fill="currentColor"
-            viewBox="0 0 20 20"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"
-            ></path>
-          </svg>
-          <svg
-            id="theme-toggle-light-icon"
-            className={`w-5 h-5 ${darkMode ? 'hidden' : 'block'}`}
-            fill="currentColor"
-            viewBox="0 0 20 20"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
-              fillRule="evenodd"
-              clipRule="evenodd"
-            ></path>
-          </svg>
+          Search
         </button>
-      </nav>
+      </div>
 
       <div className="text-center my-4 font-semibold text-xl md:text-2xl">
         Stay Updated with Trendify
       </div>
 
       <div className="flex justify-center flex-wrap gap-2 mb-4">
-        {["AI", "Robotics", "BlockChain", "CyberSecurity", " Apple"].map((topic) => (
+        {["AI", "Robotics", "BlockChain", "CyberSecurity", "Apple"].map((topic) => (
           <button
             key={topic}
             onClick={() => filterByTopic(topic)}
