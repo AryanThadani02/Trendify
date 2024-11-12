@@ -2,37 +2,39 @@ import React, { useContext, useState } from 'react';
 import { UserContext } from '../UserContext';
 import { Navigate } from 'react-router-dom';
 import Navbar from "./Navbar";
-import { toast } from 'react-toastify'; // Import toast
-import 'react-toastify/dist/ReactToastify.css'; // Import toast styles
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const SubscriptionPage = () => {
-  const { user, handleSignOut } = useContext(UserContext);
+  const { user, handleSignOut, toggleSubscription } = useContext(UserContext);
   const [darkMode, setDarkMode] = useState(false);
-  const [subscribed, setSubscribed] = useState(false); // New state to track subscription
+  const [redirect, setRedirect] = useState(false); // New state for redirection
 
   if (!user) {
     return <Navigate to="/" />;
   }
-  console.log("user", user);
 
-  // Toggle Dark Mode
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
   };
 
-  const handleSubscribe = () => {
-    // Show success toast when Subscribe button is clicked
-    toast.success("Congratulations! You are now subscribed.", {
-      position: "top-center",
-      autoClose: 3000, // Auto close the toast after 3 seconds
-    });
-
-    // Set the subscribed state to true to trigger navigation
-    setSubscribed(true);
+  const handleSubscribeToggle = () => {
+    if (user.isSubscribed) {
+      toast.info("You have unsubscribed successfully.", {
+        position: "top-center",
+        autoClose: 3000,
+      });
+    } else {
+      toast.success("Congratulations! You are now subscribed.", {
+        position: "top-center",
+        autoClose: 3000,
+      });
+      setRedirect(true); // Redirect to home after subscribing
+    }
+    toggleSubscription(); // Toggle subscription in context
   };
 
-  // Redirect to home page after subscription
-  if (subscribed) {
+  if (redirect) {
     return <Navigate to="/" />;
   }
 
@@ -48,8 +50,7 @@ const SubscriptionPage = () => {
       <div className={`text-center py-8 ${darkMode ? 'bg-black' : 'bg-white'}`}>
         <h2 className={`text-3xl font-semibold mb-4 ${darkMode ? 'text-white' : 'text-black'}`}>Upgrade to Premium</h2>
         <p className={`text-lg mb-6 ${darkMode ? 'text-white' : 'text-black'}`}>
-          Unlock exclusive features and stay ahead with Trendify's Premium
-          subscription.
+          Unlock exclusive features and stay ahead with Trendify's Premium subscription.
         </p>
 
         <div className={`p-6 rounded-lg shadow-lg mb-6 ${darkMode ? 'bg-gray-700' : 'bg-blue-100'}`}>
@@ -66,9 +67,9 @@ const SubscriptionPage = () => {
         <div className="flex justify-center gap-4">
           <button
             className="px-6 py-2 bg-green-500 text-white rounded-lg text-lg"
-            onClick={handleSubscribe} // Call handleSubscribe to show toast and update state
+            onClick={handleSubscribeToggle}
           >
-            Subscribe Now
+            {user.isSubscribed ? "Unsubscribe" : "Subscribe Now"}
           </button>
         </div>
       </div>

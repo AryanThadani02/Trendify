@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { UserContext } from '../UserContext';
 
 const Card = ({ data, darkMode }) => {
+  const { user } = useContext(UserContext); // Access user context here
   const [comments, setComments] = useState({});
   const [userPic, setUserPic] = useState(null);
 
@@ -108,50 +110,56 @@ const Card = ({ data, darkMode }) => {
                 </button>
 
                 {/* Comments Section */}
-                <div className="mt-4">
-                  <h3 className={`text-lg font-semibold ${darkMode ? 'text-white' : 'text-gray-800'}`}>Comments</h3>
-
-                  {/* Render existing comments */}
-                  <div className="mt-2">
-                    {comments[index] && comments[index].length > 0 ? (
-                      <ul className="list-disc pl-5">
-                        {comments[index].map((comment, i) => (
-                          <li key={i} className="flex items-start mt-2">
-                            {/* User Avatar */}
-                            <img
-                              src={comment.photoURL || "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&s=40"} // Placeholder if no user pic is provided
-                              alt="User Avatar"
-                              className="w-8 h-8 rounded-full mr-3"
-                              loading="lazy"
-                            />
-                            <p className={`mt-1 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>{comment.comment}</p>
-                          </li>
-                        ))}
-                      </ul>
-                    ) : (
-                      <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>No comments yet</p>
-                    )}
-                  </div>
-
-                  {/* Add a new comment */}
+                {user && user.isSubscribed ? ( // Only show if the user is subscribed
                   <div className="mt-4">
-                    <textarea
-                      className={`w-full p-2 rounded-lg ${darkMode ? 'bg-gray-700 text-white' : 'bg-gray-100 text-gray-800'}`}
-                      placeholder="Add a comment..."
-                      rows="3"
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' && e.shiftKey === false) {
-                          e.preventDefault();
-                          const newComment = e.target.value.trim();
-                          if (newComment) {
-                            handleAddComment(index, newComment);
-                            e.target.value = ''; // Clear the textarea
+                    <h3 className={`text-lg font-semibold ${darkMode ? 'text-white' : 'text-gray-800'}`}>Comments</h3>
+
+                    {/* Render existing comments */}
+                    <div className="mt-2">
+                      {comments[index] && comments[index].length > 0 ? (
+                        <ul className="list-disc pl-5">
+                          {comments[index].map((comment, i) => (
+                            <li key={i} className="flex items-start mt-2">
+                              {/* User Avatar */}
+                              <img
+                                src={comment.photoURL || "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&s=40"} // Placeholder if no user pic is provided
+                                alt="User Avatar"
+                                className="w-8 h-8 rounded-full mr-3"
+                                loading="lazy"
+                              />
+                              <p className={`mt-1 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>{comment.comment}</p>
+                            </li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>No comments yet</p>
+                      )}
+                    </div>
+
+                    {/* Add a new comment */}
+                    <div className="mt-4">
+                      <textarea
+                        className={`w-full p-2 rounded-lg ${darkMode ? 'bg-gray-700 text-white' : 'bg-gray-100 text-gray-800'}`}
+                        placeholder="Add a comment..."
+                        rows="3"
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' && e.shiftKey === false) {
+                            e.preventDefault();
+                            const newComment = e.target.value.trim();
+                            if (newComment) {
+                              handleAddComment(index, newComment);
+                              e.target.value = ''; // Clear the textarea
+                            }
                           }
-                        }
-                      }}
-                    />
+                        }}
+                      />
+                    </div>
                   </div>
-                </div>
+                ) : (
+                  <p className={`mt-4 text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                    Subscribe to add comments.
+                  </p>
+                )}
               </div>
             </div>
           );

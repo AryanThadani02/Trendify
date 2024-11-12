@@ -11,7 +11,7 @@ const Newsapp = () => {
 
   const { user, signIn, signOut } = useContext(UserContext); // Access user and actions from context
 
-  const API_KEY = "pub_58934aed7c337ed74217c3f8e3def2ae87e7a";
+  const API_KEY = "pub_589867ab89a2c81708d78da49df2846921fd6";
 
   const getData = async () => {
     try {
@@ -67,21 +67,22 @@ const Newsapp = () => {
     <div className={`min-h-screen ${darkMode ? 'bg-gray-900 text-white' : 'bg-white text-gray-900'}`}>
       <Navbar darkMode={darkMode} toggleDarkMode={toggleDarkMode} user={user} handleSignIn={handleSignIn} handleSignOut={handleSignOut} />
 
-      <div className="flex justify-center gap-3 mb-4 mt-4">
+      <div className="flex flex-col md:flex-row justify-center gap-3 mb-4 mt-4 w-full md:w-auto px-4">
         <input
           type="text"
           placeholder="Search News"
           value={search}
           onChange={handleInput}
-          className={`w-full md:w-64 px-3 py-2 text-base md:text-lg border-none rounded ${darkMode ? 'bg-black' : 'bg-white'}`}
+          className={`w-full md:w-64 px-3 py-2 text-base md:text-lg rounded ${darkMode ? 'bg-black text-white' : 'bg-gray-200 text-gray-800'}`}
         />
         <button
           onClick={getData}
-          className="w-20 h-10 bg-blue-500 rounded text-white text-base md:text-lg"
+          className={`w-full md:w-20 h-10 md:h-auto bg-blue-500 rounded text-white text-base md:text-lg`}
         >
           Search
         </button>
       </div>
+
 
       <div className="text-center my-4 font-semibold text-xl md:text-2xl">
         Stay Updated with Trendify

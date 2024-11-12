@@ -4,24 +4,36 @@ import { UserContext } from '../UserContext';
 
 const Navbar = ({ darkMode, toggleDarkMode }) => {
   const { user, handleSignIn, handleSignOut } = useContext(UserContext);
-  console.log("user", user);
 
   return (
-    <nav className={`flex justify-between items-center p-4 ${darkMode ? 'bg-gray-800' : 'bg-blue-200'}`}>
-      <Link to="/"><h1 className={`text-2xl font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>Trendify - Daily Tech & AI News Platform</h1></Link>
-      <div className="flex items-center gap-3">
+    <nav className={`flex flex-wrap items-center justify-between p-4 ${darkMode ? 'bg-gray-800' : 'bg-blue-200'}`}>
+      <Link to="/" className="flex items-center">
+        <h1 className={`text-xl sm:text-2xl font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+          Trendify
+        </h1>
+        <span className={`hidden sm:inline ml-2 ${darkMode ? 'text-white' : 'text-gray-700'}`}>
+          - Daily Tech & AI News Platform
+        </span>
+      </Link>
+
+      <div className="flex items-center gap-3 mt-2 sm:mt-0">
         <Link to="/subscription">
-          <button className={`bg-green-500 text-white px-4 py-2 rounded-lg text-lg`}>
-            Subscribe
+          <button className={`bg-green-500 text-white px-3 py-2 rounded-lg text-sm sm:text-lg`}>
+            {user && user.isSubscribed ? "You are Subscribed" : "Subscribe"}
           </button>
         </Link>
+
         {user ? (
           <div className="flex items-center gap-3">
-            <img src={user.photoURL} alt={user.displayName} className="w-8 h-8 rounded-full" />
-            <span>{user.displayName}</span>
+            <img
+              src={user.photoURL}
+              alt={user.displayName}
+              className="w-8 h-8 rounded-full"
+            />
+            <span className="text-sm sm:text-base">{user.displayName}</span>
             <button
               onClick={handleSignOut}
-              className={`bg-red-500 text-white px-4 py-2 rounded-md text-sm md:text-lg`}
+              className={`bg-red-500 text-white px-2 sm:px-4 py-1 sm:py-2 rounded-md text-xs sm:text-lg`}
             >
               Sign Out
             </button>
@@ -29,16 +41,17 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
         ) : (
           <button
             onClick={handleSignIn}
-            className={`bg-green-500 text-white px-4 py-2 rounded-md text-sm md:text-lg`}
+            className={`bg-green-500 text-white px-2 sm:px-4 py-1 sm:py-2 rounded-md text-xs sm:text-lg`}
           >
             Sign In
           </button>
         )}
+
         <button
           id="theme-toggle"
           type="button"
           onClick={toggleDarkMode}
-          className={`text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5`}
+          className={`text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg p-2.5`}
         >
           <svg
             id="theme-toggle-dark-icon"

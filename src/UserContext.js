@@ -1,53 +1,59 @@
 import React, { createContext, useState, useEffect } from 'react';
-import { signInWithGoogle } from './Firebase'; // Import the Firebase sign-in function
+import { signInWithGoogle } from './Firebase';
 
-// Create UserContext
 const UserContext = createContext();
 
-// Create a UserProvider component
 const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true); // Loading state to show while checking user authentication
+  const [loading, setLoading] = useState(true);
 
-  // Simulate user authentication state
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
       try {
         const parsedUser = JSON.parse(storedUser);
         if (parsedUser && parsedUser.displayName && parsedUser.photoURL) {
-          setUser(parsedUser); // Set the stored user data in state
+          setUser(parsedUser);
         }
       } catch (error) {
         console.error("Failed to parse stored user data", error);
-        localStorage.removeItem('user'); // Remove invalid user data
+        localStorage.removeItem('user');
       }
     }
-    setLoading(false); // Set loading to false after checking user
+    setLoading(false);
   }, []);
 
   const handleSignIn = async () => {
     try {
-      const userData = await signInWithGoogle(); // Get user data from Firebase
+      const userData = await signInWithGoogle();
       const userToStore = {
         displayName: userData.displayName,
         photoURL: userData.photoURL,
-        email: userData.email, // Store the email or other relevant details as needed
+        email: userData.email,
+        isSubscribed: false, // Add subscription status here
       };
-      localStorage.setItem('user', JSON.stringify(userToStore)); // Save user to localStorage
-      setUser(userToStore); // Update state with the user data
+      localStorage.setItem('user', JSON.stringify(userToStore));
+      setUser(userToStore);
     } catch (error) {
       console.error("Error signing in with Google:", error);
     }
   };
 
   const handleSignOut = () => {
-    localStorage.removeItem('user'); // Remove user data from localStorage
-    setUser(null); // Clear user data from state
+    localStorage.removeItem('user');
+    setUser(null);
+  };
+
+  const toggleSubscription = () => {
+    if (user) {
+      const updatedUser = { ...user, isSubscribed: !user.isSubscribed };
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+      setUser(updatedUser);
+    }
   };
 
   return (
-    <UserContext.Provider value={{ user, handleSignIn, handleSignOut, loading }}>
+    <UserContext.Provider value={{ user, handleSignIn, handleSignOut, toggleSubscription, loading }}>
       {children}
     </UserContext.Provider>
   );
