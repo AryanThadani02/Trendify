@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useContext } from 'react';
 import Card from './Card';
-import Navbar from './Navbar'; // Import the new Navbar component
-import { signInWithGoogle } from '../Firebase'; // Import your firebase config file
-import { UserContext } from '../UserContext'; // Import the UserContext
+import Navbar from './Navbar';
+import { signInWithGoogle } from '../Firebase';
+import { UserContext } from '../UserContext';
 import WeeklyDigestSubscription from './WeeklyDigestSubscription';
 
 const Newsapp = () => {
@@ -10,7 +10,7 @@ const Newsapp = () => {
   const [newsData, setNewsData] = useState([]);
   const [darkMode, setDarkMode] = useState(false);
 
-  const { user, signIn, signOut } = useContext(UserContext); // Access user and actions from context
+  const { user, signIn, signOut } = useContext(UserContext);
 
   const API_KEY = "pub_589867ab89a2c81708d78da49df2846921fd6";
 
@@ -54,14 +54,14 @@ const Newsapp = () => {
     try {
       const result = await signInWithGoogle();
       console.log(result);
-      signIn(result); // Use context's signIn function
+      signIn(result);
     } catch (error) {
       console.error("Error during Google sign-in:", error.message);
     }
   };
 
   const handleSignOut = () => {
-    signOut(); // Use context's signOut function
+    signOut();
   };
 
   return (

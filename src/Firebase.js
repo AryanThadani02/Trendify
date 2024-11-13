@@ -1,4 +1,3 @@
-// firebaseConfig.js
 import { initializeApp } from "firebase/app";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 
@@ -22,7 +21,6 @@ const provider = new GoogleAuthProvider();
 export const signInWithGoogle = async () => {
   try {
     const result = await signInWithPopup(auth, provider);
-    // This gives you a Google Access Token. You can use it to access the Google API.
     const credential = GoogleAuthProvider.credentialFromResult(result);
     const token = credential.accessToken;
     const user = result.user;
@@ -30,10 +28,9 @@ export const signInWithGoogle = async () => {
     console.log("User info:", user);
     console.log("Access token:", token);
 
-    // Return the user info
     return user;
   } catch (error) {
     console.error("Error during Google sign-in:", error.message);
-    throw error; // Rethrow error so that the calling function can handle it
+    throw error;
   }
 };

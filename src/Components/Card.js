@@ -2,18 +2,17 @@ import React, { useState, useEffect, useContext } from 'react';
 import { UserContext } from '../UserContext';
 
 const Card = ({ data, darkMode }) => {
-  const { user } = useContext(UserContext); // Access user context here
+  const { user } = useContext(UserContext);
   const [comments, setComments] = useState({});
   const [userPic, setUserPic] = useState(null);
 
-  // Get the user profile picture from localStorage
   useEffect(() => {
-    const storedUser = localStorage.getItem('user'); // Assuming user data is stored as a JSON string in localStorage
+    const storedUser = localStorage.getItem('user');
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
-      setUserPic(parsedUser.photoURL || "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&s=40"); // Fallback to default if no profile pic
+      setUserPic(parsedUser.photoURL || "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&s=40");
     } else {
-      setUserPic("https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&s=40"); // Default fallback
+      setUserPic("https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&s=40");
     }
   }, []);
 
@@ -23,8 +22,8 @@ const Card = ({ data, darkMode }) => {
 
   // Function to extract important words or phrases from the description
   const extractKeywords = (text, maxLength = 50) => {
-    if (!text) return ""; // Return empty string if text is null or undefined
-    const keywords = text.split(' ').slice(0, 100); // Adjust the number of words
+    if (!text) return "";
+    const keywords = text.split(' ').slice(0, 100);
     const summary = keywords.join(' ');
     return summary.length > maxLength ? `${summary.substring(0, maxLength)}...` : summary;
   };
@@ -110,7 +109,7 @@ const Card = ({ data, darkMode }) => {
                 </button>
 
                 {/* Comments Section */}
-                {user && user.isSubscribed ? ( // Only show if the user is subscribed
+                {user && user.isSubscribed ? (
                   <div className="mt-4">
                     <h3 className={`text-lg font-semibold ${darkMode ? 'text-white' : 'text-gray-800'}`}>Comments</h3>
 
@@ -122,7 +121,7 @@ const Card = ({ data, darkMode }) => {
                             <li key={i} className="flex items-start mt-2">
                               {/* User Avatar */}
                               <img
-                                src={comment.photoURL || "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&s=40"} // Placeholder if no user pic is provided
+                                src={comment.photoURL || "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&s=40"}
                                 alt="User Avatar"
                                 className="w-8 h-8 rounded-full mr-3"
                                 loading="lazy"
@@ -148,7 +147,7 @@ const Card = ({ data, darkMode }) => {
                             const newComment = e.target.value.trim();
                             if (newComment) {
                               handleAddComment(index, newComment);
-                              e.target.value = ''; // Clear the textarea
+                              e.target.value = '';
                             }
                           }
                         }}

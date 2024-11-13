@@ -2,9 +2,9 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import Newsapp from './Components/Newsapp';
 import SubscriptionPage from './Components/Subscription';
-import { UserProvider, UserContext } from './UserContext'; // Import UserProvider
-import { ToastContainer, toast } from 'react-toastify'; // Import ToastContainer and toast
-import 'react-toastify/dist/ReactToastify.css'; // Import the toast styles
+import { UserProvider, UserContext } from './UserContext';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   return (
@@ -32,10 +32,9 @@ const PrivateRoute = ({ children }) => {
   const { user } = React.useContext(UserContext);
 
   if (!user) {
-    // If not logged in, show a toast and redirect to home page
     toast.warn("Please sign in to access this page.", {
       position: "top-center",
-      autoClose: 3000, // Toast auto closes after 3 seconds
+      autoClose: 3000,
     });
 
     return <Navigate to="/" />;

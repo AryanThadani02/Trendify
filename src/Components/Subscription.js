@@ -8,7 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 const SubscriptionPage = () => {
   const { user, handleSignOut, toggleSubscription } = useContext(UserContext);
   const [darkMode, setDarkMode] = useState(false);
-  const [redirect, setRedirect] = useState(false); // New state for redirection
+  const [redirect, setRedirect] = useState(false);
 
   if (!user) {
     return <Navigate to="/" />;
@@ -29,9 +29,9 @@ const SubscriptionPage = () => {
         position: "top-center",
         autoClose: 3000,
       });
-      setRedirect(true); // Redirect to home after subscribing
+      setRedirect(true);
     }
-    toggleSubscription(); // Toggle subscription in context
+    toggleSubscription();
   };
 
   if (redirect) {

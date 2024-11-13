@@ -7,7 +7,7 @@ const WeeklyDigestSubscription = ({ darkMode }) => {
     content: 'Generative AI integration and advanced manufacturing processes are driving smartphone costs higher, with a predicted 5% price increase by 2025.',
     author: 'thehansindia',
     link: 'https://www.thehansindia.com/technology/tech-news/smartphone-prices-set-to-rise-in-2025-due-to-generative-ai-and-advanced-tech-921117',
-    imageUrl: 'https://assets.thehansindia.com/h-upload/2024/11/12/1496588-ai.webp'  // Image URL to be embedded in email
+    imageUrl: 'https://assets.thehansindia.com/h-upload/2024/11/12/1496588-ai.webp'
   };
 
   const [email, setEmail] = useState('');
@@ -26,7 +26,7 @@ const WeeklyDigestSubscription = ({ darkMode }) => {
       article_content: article.content,
       article_author: article.author,
       article_link: article.link,
-      article_image: article.imageUrl,  // Image URL for embedding
+      article_image: article.imageUrl,
     };
 
     setLoading(true);
@@ -34,15 +34,15 @@ const WeeklyDigestSubscription = ({ darkMode }) => {
 
     emailjs
       .send(
-        'service_5ssyuw1',    // Your EmailJS Service ID
-        'template_sv0y97p',   // Your EmailJS Template ID
+        'service_5ssyuw1',    //  Service ID
+        'template_sv0y97p',   //  Template ID
         templateParams,
-        'ysoPHM0--xGsXGH2s'   // Your EmailJS User ID
+        'ysoPHM0--xGsXGH2s'   //  User ID
       )
       .then(
         (response) => {
           console.log('Email sent successfully', response);
-          setIsWDSubscribed(true);  // Show confirmation message
+          setIsWDSubscribed(true);
           setLoading(false);
         },
         (error) => {
@@ -65,8 +65,8 @@ const WeeklyDigestSubscription = ({ darkMode }) => {
 
   const handleUnsubscribe = () => {
     setIsWDSubscribed(false); // Reset subscription status
-    setEmail(''); // Optionally, reset the email input as well
-    setError(''); // Clear error if any
+    setEmail('');
+    setError('');
   };
 
   return (
